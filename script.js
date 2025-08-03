@@ -1,47 +1,48 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const addButton = document.getElementById('add-task-btn');
-    const taskInput = document.getElementById('task-input');
-    const taskList = document.getElementById('task-list');
-
-    // Function to add a task
-    function addTask() {
+// Load tasks from Local Storage on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadTasks();
+    document.getElementById('taskForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+        const taskInput = document.getElementById('taskInput');
         const taskText = taskInput.value.trim();
-
-        if (taskText === '') {
-            alert('Please enter a task.');
-            return;
-        }
-
-        // Create <li> and set text
-        const li = document.createElement('li');
-        li.textContent = taskText;
-
-        // Create "Remove" button
-        const removeBtn = document.createElement('button');
-        removeBtn.textContent = 'Remove';
-
-        // ✅ Add class using classList.add
-        removeBtn.classList.add('remove-btn');
-
-        // Set remove button behavior
-        removeBtn.onclick = function () {
-            taskList.removeChild(li);
-        };
-
-        // Add elements to DOM
-        li.appendChild(removeBtn);
-        taskList.appendChild(li);
-
-        // Clear the input
-        taskInput.value = '';
-    }
-
-    // Add event listeners
-    addButton.addEventListener('click', addTask);
-
-    taskInput.addEventListener('keypress', function (event) {
-        if (event.key === 'Enter') {
-            addTask();
+        if (taskText !== '') {
+            addTask(taskText, true);
+            taskInput.value = '';
         }
     });
 });
+
+function loadTasks() {
+    const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+    storedTasks.forEach(taskText => addTask(taskText, false));
+}
+
+function addTask(taskText, save = true) {
+    const taskList = document.getElementById('taskList');
+    const li = document.createElement('li');
+    li.textContent = taskText;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.textContent = 'Remove';
+    removeBtn.className = 'remove-btn';
+
+    removeBtn.onclick = function () {
+        taskList.removeChild(li);
+        removeTaskFromStorage(taskText);
+    };
+
+    li.appendChild(removeBtn);
+    taskList.appendChild(li);
+
+    if (save) {
+        const storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+        storedTasks.push(taskText);
+        localStorage.setItem('tasks', JSON.stringify(storedTasks));
+    }
+}
+
+function removeTaskFromStorage(taskText) {
+    let storedTasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+    storedTasks = storedTasks.filter(task => task !== taskText);
+    localStorage.setItem('tasks', JSON.stringify(storedTasks));
+}
