@@ -3,6 +3,29 @@ const addButton = document.getElementById('add-task-btn'); // The "Add Task" but
 const taskInput = document.getElementById('task-input');   // The input field for tasks
 const taskList = document.getElementById('task-list');     // The list to display tasks
 
+// Define the addTask function
+function addTask() {
+    // Get and trim the input value
+    const taskText = taskInput.value.trim();
+
+    // If empty, alert the user
+    if (taskText === "") {
+        alert("Please enter a task.");
+        return; // Stop here
+    }
+
+    // Create a new list item
+    const li = document.createElement('li');
+    li.textContent = taskText;
+    taskList.appendChild(li);
+
+    // Clear input field
+    taskInput.value = "";
+}
+
+// Connect addTask function to button click
+addButton.addEventListener('click', addTask);
+
 // Load tasks from Local Storage on page load
 document.addEventListener('DOMContentLoaded', () => {
     loadTasks();
