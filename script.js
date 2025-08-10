@@ -1,3 +1,8 @@
+// 1️⃣ Select DOM elements
+const addButton = document.getElementById('add-task-btn'); // The "Add Task" button
+const taskInput = document.getElementById('task-input');   // The input field for tasks
+const taskList = document.getElementById('task-list');     // The list to display tasks
+
 // Load tasks from Local Storage on page load
 document.addEventListener('DOMContentLoaded', () => {
     loadTasks();
